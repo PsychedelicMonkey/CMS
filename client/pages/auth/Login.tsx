@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
+import api from '../../lib/api';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
 
-    alert(JSON.stringify({ email, password }));
+    const res = await api.post(
+      '/auth/login',
+      JSON.stringify({ email, password })
+    );
+
+    console.log(res.data);
   };
 
   return (
