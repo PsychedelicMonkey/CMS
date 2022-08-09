@@ -5,13 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "build:server": "tsc -p .",
-    "build:client": "webpack --mode production",
+    "build:server": "cross-env NODE_ENV=production tsc -p .",
+    "build:client": "cross-env NODE_ENV=production webpack --mode production",
     "build": "npm run build:server && npm run build:client",
-    "dev:server": "nodemon src/index.ts",
-    "dev:client": "webpack-dev-server --mode development",
+    "dev:server": "cross-env NODE_ENV=development nodemon src/index.ts",
+    "dev:client": "cross-env NODE_ENV=development webpack-dev-server --mode development",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "start": "node dist/index.js"
+    "start": "cross-env NODE_ENV=production node dist/index.js"
   },
   "repository": {
     "type": "git",
@@ -59,6 +59,7 @@
     "@types/supertest": "^2.0.12",
     "babel-loader": "^8.2.5",
     "concurrently": "^7.3.0",
+    "cross-env": "^7.0.3",
     "css-loader": "^6.7.1",
     "html-webpack-plugin": "^5.5.0",
     "jest": "^28.1.3",
