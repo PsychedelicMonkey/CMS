@@ -1,0 +1,31 @@
+{
+  "name": "cms",
+  "version": "1.0.0",
+  "description": "A custom headless CMS built with express.js and react",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "build": "tsc -p .",
+    "start": "node dist/index.js",
+    "dev": "nodemon src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PsychedelicMonkey/CMS.git"
+  },
+  "author": "PsychedelicMonkey",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/PsychedelicMonkey/CMS/issues"
+  },
+  "homepage": "https://github.com/PsychedelicMonkey/CMS#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "nodemon": "^2.0.19",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.4"
+  }
+}
