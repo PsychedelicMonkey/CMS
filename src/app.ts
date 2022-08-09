@@ -1,7 +1,8 @@
-import express, { Application } from 'express';
+import express, { Application, NextFunction, Request, Response } from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import logger from './config/logger';
 
 import indexRouter from './routes';
 import authRouter from './routes/auth';
@@ -25,6 +26,14 @@ const createApplication = () => {
   app.use('/', indexRouter);
   app.use('/auth', authRouter);
   app.use('/users', usersRouter);
+
+  app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+    if (err instanceof Error) {
+      logger.error(err.message);
+    }
+
+    return res.status(500).json({ msg: 'server error' });
+  });
 
   return app;
 };
