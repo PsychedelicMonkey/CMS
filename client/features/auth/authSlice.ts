@@ -13,6 +13,12 @@ interface ILoginInput {
   password: string;
 }
 
+interface IRegisterInput {
+  name: string;
+  email: string;
+  password: string;
+}
+
 const initialState: IAuthSlice = {
   status: 'idle',
   token: null!,
@@ -25,6 +31,8 @@ export const authSlice = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
+
+      // Login
       .addCase(loginUser.pending, (state) => {
         state.status = 'loading';
       })
@@ -34,6 +42,21 @@ export const authSlice = createSlice({
         state.user = action.payload.user;
       })
       .addCase(loginUser.rejected, (state) => {
+        state.status = 'failed';
+        state.token = null!;
+        state.user = null!;
+      })
+
+      // Registration
+      .addCase(registerUser.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.status = 'idle';
+        state.token = action.payload.token;
+        state.user = action.payload.user;
+      })
+      .addCase(registerUser.rejected, (state) => {
         state.status = 'failed';
         state.token = null!;
         state.user = null!;
@@ -48,6 +71,23 @@ export const loginUser = createAsyncThunk(
     const res = await api.post(
       '/auth/login',
       JSON.stringify({ email, password })
+    );
+
+    return res.data;
+  }
+);
+
+export const registerUser = createAsyncThunk(
+  'auth/registerUser',
+  async (data: IRegisterInput) => {
+    const {
+      name,
+      email,
+      password,
+    }: { name: string; email: string; password: string } = data;
+    const res = await api.post(
+      '/auth/register',
+      JSON.stringify({ name, email, password })
     );
 
     return res.data;
