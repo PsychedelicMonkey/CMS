@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { sign } from 'jsonwebtoken';
+
+import auth from '../middleware/auth';
 import User from '../models/User';
 
 const router: Router = Router();
@@ -52,5 +54,9 @@ router.post(
     }
   }
 );
+
+router.get('/me', auth, (req: Request, res: Response, next: NextFunction) => {
+  return res.json(req.user);
+});
 
 export default router;
