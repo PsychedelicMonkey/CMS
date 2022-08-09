@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
 import indexRouter from './routes';
+import usersRouter from './routes/users';
 
 const createApplication = () => {
   const app: Application = express();
@@ -21,6 +22,7 @@ const createApplication = () => {
   );
 
   app.use('/', indexRouter);
+  app.use('/users', usersRouter);
 
   return app;
 };

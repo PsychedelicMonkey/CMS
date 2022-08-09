@@ -1,5 +1,11 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import { Application } from 'express';
 import createApplication from './app';
+import connectDB from './config/db';
+
+connectDB();
 
 const app: Application = createApplication();
 
