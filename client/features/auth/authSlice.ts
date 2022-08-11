@@ -20,7 +20,7 @@ interface IRegisterInput {
 }
 
 const initialState: IAuthSlice = {
-  status: 'idle',
+  status: 'loading',
   token: null!,
   user: null!,
 };
@@ -114,6 +114,6 @@ export const loadUser = createAsyncThunk('auth/loadUser', async () => {
   return res.data;
 });
 
-export const selectAuthUser = (state: RootState) => state.auth.user;
+export const selectAuthUser = (state: RootState) => state.auth;
 
 export default authSlice.reducer;

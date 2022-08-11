@@ -7,6 +7,7 @@ import Users from './pages/Users';
 import Register from './pages/auth/Register';
 import { loadUser } from './features/auth/authSlice';
 import { useAppDispatch } from './app/hooks';
+import PrivateRoute from './routes/PrivateRoute';
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -21,7 +22,14 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/users" element={<Users />} />
+        <Route
+          path="/users"
+          element={
+            <PrivateRoute>
+              <Users />
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </div>
   );
