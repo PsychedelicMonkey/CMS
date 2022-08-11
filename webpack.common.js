@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: './client/index.tsx',
+  target: 'web',
   output: {
     path: path.join(__dirname, 'dist', 'client'),
     publicPath: '/',
