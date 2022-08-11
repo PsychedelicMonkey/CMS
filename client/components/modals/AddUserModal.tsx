@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Form,
@@ -10,14 +10,16 @@ import {
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { createUser, selectUsers } from '../../features/users/usersSlice';
 import FormInput from '../../components/form/FormInput';
+import { Alert } from 'reactstrap';
 
 const AddUserModal = () => {
   const [modal, setModal] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useAppDispatch();
-  const { errors } = useAppSelector(selectUsers);
+  const { status, errors } = useAppSelector(selectUsers);
 
   const toggle = () => setModal(!modal);
 
@@ -26,6 +28,18 @@ const AddUserModal = () => {
 
     dispatch(createUser({ name, email, password }));
   };
+
+  const onDismiss = () => setVisible(false);
+
+  useEffect(() => {
+    if (status === 'success') {
+      setName('');
+      setEmail('');
+      setPassword('');
+
+      setVisible(true);
+    }
+  }, [status]);
 
   return (
     <>
@@ -37,6 +51,10 @@ const AddUserModal = () => {
         <ModalHeader toggle={toggle}>Add New User</ModalHeader>
         <Form onSubmit={onSubmit}>
           <ModalBody>
+            <Alert color="success" isOpen={visible} toggle={onDismiss}>
+              User created successfully
+            </Alert>
+
             <FormInput
               label="Name"
               type="text"
