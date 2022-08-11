@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table } from 'reactstrap';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { fetchUsers, selectUsers } from './usersSlice';
+import timestamp from '../../lib/timestamp';
 
 interface IUser {
   _id: string;
@@ -28,8 +29,8 @@ const UsersTable = () => {
           <th>ID</th>
           <th>Name</th>
           <th>Email</th>
-          <th>Created At</th>
-          <th>Updated At</th>
+          <th>Date Joined</th>
+          <th>Last Updated</th>
         </tr>
       </thead>
       <tbody>
@@ -38,8 +39,8 @@ const UsersTable = () => {
             <th>{user._id}</th>
             <td>{user.name}</td>
             <td>{user.email}</td>
-            <td>{user.createdAt}</td>
-            <td>{user.updatedAt}</td>
+            <td>{timestamp(user.createdAt)}</td>
+            <td>{timestamp(user.updatedAt)}</td>
           </tr>
         ))}
       </tbody>
