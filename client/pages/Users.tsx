@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Table } from 'reactstrap';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
+import AddUserModal from '../components/modals/AddUserModal';
 import { fetchUsers, selectUsers } from '../features/users/usersSlice';
 
 const Users = () => {
   const dispatch = useAppDispatch();
-  const users = useAppSelector(selectUsers);
+  const { users } = useAppSelector(selectUsers);
 
   useEffect(() => {
     dispatch(fetchUsers());
@@ -22,6 +23,8 @@ const Users = () => {
   return (
     <div className="container">
       <h1>Users</h1>
+
+      <AddUserModal />
 
       <Table striped>
         <thead>
