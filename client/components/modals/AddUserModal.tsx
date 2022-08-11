@@ -2,10 +2,6 @@ import React, { useState } from 'react';
 import {
   Button,
   Form,
-  FormFeedback,
-  FormGroup,
-  Input,
-  Label,
   Modal,
   ModalBody,
   ModalFooter,
@@ -13,11 +9,7 @@ import {
 } from 'reactstrap';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { createUser, selectUsers } from '../../features/users/usersSlice';
-
-interface IError {
-  msg: string;
-  param: string;
-}
+import FormInput from '../../components/form/FormInput';
 
 const AddUserModal = () => {
   const [modal, setModal] = useState(false);
@@ -35,11 +27,6 @@ const AddUserModal = () => {
     dispatch(createUser({ name, email, password }));
   };
 
-  const errorExists = (param: string): IError => {
-    const errorObj: any = errors?.find((e: any) => e.param === param);
-    return errorObj;
-  };
-
   return (
     <>
       <Button color="primary" onClick={toggle}>
@@ -50,56 +37,37 @@ const AddUserModal = () => {
         <ModalHeader toggle={toggle}>Add New User</ModalHeader>
         <Form onSubmit={onSubmit}>
           <ModalBody>
-            <FormGroup>
-              <Label for="name">Name</Label>
-              <Input
-                type="text"
-                id="name"
-                name="name"
-                placeholder="John Doe"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                invalid={errorExists('name') ? true : false}
-              />
+            <FormInput
+              label="Name"
+              type="text"
+              id="name"
+              name="name"
+              placeholder="John Doe"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              errors={errors}
+            />
 
-              {errorExists('name') ? (
-                <FormFeedback>{errorExists('name').msg}</FormFeedback>
-              ) : null}
-            </FormGroup>
+            <FormInput
+              label="Email Address"
+              type="email"
+              id="email"
+              name="email"
+              placeholder="john@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              errors={errors}
+            />
 
-            <FormGroup>
-              <Label for="email">Email Address</Label>
-              <Input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="john@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                invalid={errorExists('email') ? true : false}
-              />
-
-              {errorExists('email') ? (
-                <FormFeedback>{errorExists('email').msg}</FormFeedback>
-              ) : null}
-            </FormGroup>
-
-            <FormGroup>
-              <Label for="password">Password</Label>
-              <Input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                invalid={errorExists('password') ? true : false}
-              />
-
-              {errorExists('password') ? (
-                <FormFeedback>{errorExists('password').msg}</FormFeedback>
-              ) : null}
-            </FormGroup>
+            <FormInput
+              label="Password"
+              type="password"
+              id="password"
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              errors={errors}
+            />
           </ModalBody>
           <ModalFooter>
             <Button type="submit" color="primary">
