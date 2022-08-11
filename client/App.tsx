@@ -8,6 +8,7 @@ import Register from './pages/auth/Register';
 import { loadUser } from './features/auth/authSlice';
 import { useAppDispatch } from './app/hooks';
 import PrivateRoute from './routes/PrivateRoute';
+import AppNavbar from './components/AppNavbar';
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -18,6 +19,8 @@ const App = () => {
 
   return (
     <div>
+      <AppNavbar />
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
