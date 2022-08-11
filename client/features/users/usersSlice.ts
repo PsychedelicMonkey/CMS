@@ -39,7 +39,7 @@ export const userSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(fetchUsers.fulfilled, (state, action) => {
-        state.status = 'success';
+        state.status = 'loaded';
         state.users = action.payload;
       })
       .addCase(fetchUsers.rejected, (state) => {
@@ -55,7 +55,7 @@ export const userSlice = createSlice({
         state.errors = null!;
       })
       .addCase(createUser.rejected, (state, action: AnyAction) => {
-        state.status = 'idle';
+        state.status = 'failed';
         state.errors = action.payload.errors;
       });
   },

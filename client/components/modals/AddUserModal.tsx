@@ -39,7 +39,7 @@ const AddUserModal = () => {
 
       setVisible(true);
     }
-  }, [status]);
+  }, [status, dispatch]);
 
   return (
     <>
