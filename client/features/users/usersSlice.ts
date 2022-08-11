@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, AnyAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import api from '../../lib/api';
 
@@ -13,6 +13,7 @@ interface User {
 interface IUserSlice {
   status: string;
   users: Array<User>;
+  errors: Array<object>;
 }
 
 interface IUserData {
@@ -24,6 +25,7 @@ interface IUserData {
 const initialState: IUserSlice = {
   status: 'idle',
   users: [],
+  errors: null!,
 };
 
 export const userSlice = createSlice({
@@ -50,9 +52,11 @@ export const userSlice = createSlice({
       .addCase(createUser.fulfilled, (state, action) => {
         state.status = 'idle';
         state.users.push(action.payload);
+        state.errors = null!;
       })
-      .addCase(createUser.rejected, (state) => {
+      .addCase(createUser.rejected, (state, action: AnyAction) => {
         state.status = 'idle';
+        state.errors = action.payload.errors;
       });
   },
 });
@@ -64,18 +68,22 @@ export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
 
 export const createUser = createAsyncThunk(
   'users/createUser',
-  async (data: IUserData) => {
+  async (data: IUserData, { rejectWithValue }) => {
     const {
       name,
       email,
       password,
     }: { name: string; email: string; password: string } = data;
-    const res = await api.post(
-      '/users/',
-      JSON.stringify({ name, email, password })
-    );
+    try {
+      const res = await api.post(
+        '/users/',
+        JSON.stringify({ name, email, password })
+      );
 
-    return res.data;
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
   }
 );
 

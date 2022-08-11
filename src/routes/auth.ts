@@ -52,8 +52,10 @@ router.post(
     .isLength({ min: 5 })
     .withMessage('password must be at least 5 characters long'),
   check('email').custom((email) => {
-    return User.findOne({ email }).then(() => {
-      return Promise.reject('that email address is already registered');
+    return User.findOne({ email }).then((user) => {
+      if (user) {
+        return Promise.reject('that email address is already registered');
+      }
     });
   }),
   async (req: Request, res: Response, next: NextFunction) => {

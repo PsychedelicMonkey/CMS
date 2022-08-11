@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   Button,
   Form,
+  FormFeedback,
   FormGroup,
   Input,
   Label,
@@ -10,8 +11,13 @@ import {
   ModalFooter,
   ModalHeader,
 } from 'reactstrap';
-import { useAppDispatch } from '../../app/hooks';
-import { createUser } from '../../features/users/usersSlice';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { createUser, selectUsers } from '../../features/users/usersSlice';
+
+interface IError {
+  msg: string;
+  param: string;
+}
 
 const AddUserModal = () => {
   const [modal, setModal] = useState(false);
@@ -19,6 +25,7 @@ const AddUserModal = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useAppDispatch();
+  const { errors } = useAppSelector(selectUsers);
 
   const toggle = () => setModal(!modal);
 
@@ -26,6 +33,11 @@ const AddUserModal = () => {
     e.preventDefault();
 
     dispatch(createUser({ name, email, password }));
+  };
+
+  const errorExists = (param: string): IError => {
+    const errorObj: any = errors?.find((e: any) => e.param === param);
+    return errorObj;
   };
 
   return (
@@ -47,7 +59,12 @@ const AddUserModal = () => {
                 placeholder="John Doe"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                invalid={errorExists('name') ? true : false}
               />
+
+              {errorExists('name') ? (
+                <FormFeedback>{errorExists('name').msg}</FormFeedback>
+              ) : null}
             </FormGroup>
 
             <FormGroup>
@@ -59,7 +76,12 @@ const AddUserModal = () => {
                 placeholder="john@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                invalid={errorExists('email') ? true : false}
               />
+
+              {errorExists('email') ? (
+                <FormFeedback>{errorExists('email').msg}</FormFeedback>
+              ) : null}
             </FormGroup>
 
             <FormGroup>
@@ -71,7 +93,12 @@ const AddUserModal = () => {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                invalid={errorExists('password') ? true : false}
               />
+
+              {errorExists('password') ? (
+                <FormFeedback>{errorExists('password').msg}</FormFeedback>
+              ) : null}
             </FormGroup>
           </ModalBody>
           <ModalFooter>
