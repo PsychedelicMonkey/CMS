@@ -60,6 +60,20 @@ export const authSlice = createSlice({
         state.status = 'failed';
         state.token = null!;
         state.user = null!;
+      })
+
+      // Load user
+
+      .addCase(loadUser.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(loadUser.fulfilled, (state, action) => {
+        state.status = 'idle';
+        state.user = action.payload.user;
+      })
+      .addCase(loadUser.rejected, (state) => {
+        state.status = 'failed';
+        state.user = null!;
       });
   },
 });
@@ -93,6 +107,12 @@ export const registerUser = createAsyncThunk(
     return res.data;
   }
 );
+
+export const loadUser = createAsyncThunk('auth/loadUser', async () => {
+  const res = await api.get('/auth/me');
+
+  return res.data;
+});
 
 export const selectAuthUser = (state: RootState) => state.auth.user;
 
