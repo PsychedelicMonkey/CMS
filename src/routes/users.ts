@@ -81,12 +81,34 @@ router.put(
       let user = await User.findById(id);
 
       if (!user) {
-        return res.status(404).json({ msg: 'User not found' });
+        return res.status(404).json({ msg: 'user not found' });
       }
 
       user = await User.findByIdAndUpdate(id, { name, email }, { new: true });
 
       return res.json(user);
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
+router.delete(
+  '/:id',
+  auth,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+
+      let user = await User.findById(id);
+
+      if (!user) {
+        return res.status(404).json({ msg: 'user not found' });
+      }
+
+      await user.remove();
+
+      return res.end();
     } catch (err) {
       return next(err);
     }

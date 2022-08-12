@@ -5,6 +5,7 @@ import { fetchUsers, selectUsers } from './usersSlice';
 import timestamp from '../../lib/timestamp';
 
 import EditUserModal from './EditUserModal';
+import DeleteUserModal from './DeleteUserModal';
 
 interface IUser {
   _id: string;
@@ -46,7 +47,7 @@ const UsersTable = () => {
             <td>{timestamp(user.updatedAt)}</td>
             <td>
               <EditUserModal id={user._id} />
-              <Button color="danger">Delete</Button>
+              <DeleteUserModal id={user._id} />
             </td>
           </tr>
         ))}

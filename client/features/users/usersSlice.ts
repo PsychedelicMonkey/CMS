@@ -76,6 +76,22 @@ export const userSlice = createSlice({
       .addCase(updateUser.rejected, (state, action: AnyAction) => {
         state.status = 'failed';
         state.errors = action.payload.errors;
+      })
+
+      // Delete user
+      .addCase(deleteUser.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.status = 'success';
+        state.errors = null!;
+
+        console.log(action.payload);
+        state.users = state.users.filter((u) => u._id !== action.payload);
+      })
+      .addCase(deleteUser.rejected, (state, action: AnyAction) => {
+        state.status = 'failed';
+        state.errors = action.payload.errors;
       });
   },
 });
@@ -118,7 +134,23 @@ export const updateUser = createAsyncThunk(
       );
 
       return res.data;
-    } catch (err) {}
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const deleteUser = createAsyncThunk(
+  'users/deleteUser',
+  async (data: any, { rejectWithValue }) => {
+    const { id }: { id: string } = data;
+    try {
+      await api.delete(`/users/${id}`);
+
+      return id;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
   }
 );
 
