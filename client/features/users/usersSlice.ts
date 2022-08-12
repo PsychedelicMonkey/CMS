@@ -45,6 +45,7 @@ export const userSlice = createSlice({
       .addCase(fetchUsers.rejected, (state) => {
         state.status = 'failed';
       })
+
       // Create user
       .addCase(createUser.pending, (state) => {
         state.status = 'loading';
@@ -55,6 +56,24 @@ export const userSlice = createSlice({
         state.errors = null!;
       })
       .addCase(createUser.rejected, (state, action: AnyAction) => {
+        state.status = 'failed';
+        state.errors = action.payload.errors;
+      })
+
+      // Update user
+      .addCase(updateUser.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.status = 'success';
+        state.errors = null!;
+
+        const index = state.users.findIndex(
+          (u) => u._id === action.payload._id
+        );
+        state.users[index] = action.payload;
+      })
+      .addCase(updateUser.rejected, (state, action: AnyAction) => {
         state.status = 'failed';
         state.errors = action.payload.errors;
       });
@@ -84,6 +103,22 @@ export const createUser = createAsyncThunk(
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
+  }
+);
+
+export const updateUser = createAsyncThunk(
+  'users/updateUser',
+  async (data: any, { rejectWithValue }) => {
+    const { id, name, email }: { id: string; name: string; email: string } =
+      data;
+    try {
+      const res = await api.put(
+        `/users/${id}`,
+        JSON.stringify({ name, email })
+      );
+
+      return res.data;
+    } catch (err) {}
   }
 );
 

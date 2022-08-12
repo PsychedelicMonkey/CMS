@@ -70,4 +70,27 @@ router.post(
   }
 );
 
+router.put(
+  '/:id',
+  auth,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const { name, email } = req.body;
+
+      let user = await User.findById(id);
+
+      if (!user) {
+        return res.status(404).json({ msg: 'User not found' });
+      }
+
+      user = await User.findByIdAndUpdate(id, { name, email }, { new: true });
+
+      return res.json(user);
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
 export default router;

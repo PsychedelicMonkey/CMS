@@ -1,6 +1,6 @@
 import React from 'react';
 
-import AddUserModal from '../components/modals/AddUserModal';
+import AddUserModal from '../features/users/AddUserModal';
 import UsersTable from '../features/users/UsersTable';
 
 const Users = () => {

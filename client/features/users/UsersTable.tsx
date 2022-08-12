@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Table } from 'reactstrap';
+import React, { useEffect } from 'react';
+import { Button, Table } from 'reactstrap';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { fetchUsers, selectUsers } from './usersSlice';
 import timestamp from '../../lib/timestamp';
+
+import EditUserModal from './EditUserModal';
 
 interface IUser {
   _id: string;
@@ -31,6 +33,7 @@ const UsersTable = () => {
           <th>Email</th>
           <th>Date Joined</th>
           <th>Last Updated</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -41,6 +44,10 @@ const UsersTable = () => {
             <td>{user.email}</td>
             <td>{timestamp(user.createdAt)}</td>
             <td>{timestamp(user.updatedAt)}</td>
+            <td>
+              <EditUserModal id={user._id} />
+              <Button color="danger">Delete</Button>
+            </td>
           </tr>
         ))}
       </tbody>

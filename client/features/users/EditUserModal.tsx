@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Alert,
   Button,
   Form,
   Modal,
@@ -8,51 +9,46 @@ import {
   ModalHeader,
 } from 'reactstrap';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { createUser, selectUsers } from '../../features/users/usersSlice';
 import FormInput from '../../components/form/FormInput';
-import { Alert } from 'reactstrap';
+import { selectUsers, updateUser } from './usersSlice';
 
-const AddUserModal = () => {
+type Props = {
+  id: string;
+};
+
+const EditUserModal = ({ id }: Props) => {
   const [modal, setModal] = useState(false);
   const [visible, setVisible] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const dispatch = useAppDispatch();
-  const { status, errors } = useAppSelector(selectUsers);
+  const { users, status, errors } = useAppSelector(selectUsers);
 
   const toggle = () => setModal(!modal);
+  const onDismiss = () => setVisible(false);
 
   const onSubmit = (e) => {
     e.preventDefault();
 
-    dispatch(createUser({ name, email, password }));
+    dispatch(updateUser({ id, name, email }));
   };
 
-  const onDismiss = () => setVisible(false);
-
   useEffect(() => {
-    if (status === 'success') {
-      setName('');
-      setEmail('');
-      setPassword('');
-
-      setVisible(true);
-    }
-  }, [status, dispatch]);
+    const user = users.find((u) => u._id === id)!;
+    setName(user.name);
+    setEmail(user.email);
+  }, [modal, status, dispatch]);
 
   return (
     <>
-      <Button color="primary" onClick={toggle}>
-        Add New User
-      </Button>
+      <Button onClick={() => setModal(true)}>Edit</Button>
 
       <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Add New User</ModalHeader>
+        <ModalHeader toggle={toggle}>Edit User</ModalHeader>
         <Form onSubmit={onSubmit}>
           <ModalBody>
             <Alert color="success" isOpen={visible} toggle={onDismiss}>
-              User created successfully
+              User updated successfully
             </Alert>
 
             <FormInput
@@ -76,20 +72,10 @@ const AddUserModal = () => {
               onChange={(e) => setEmail(e.target.value)}
               errors={errors}
             />
-
-            <FormInput
-              label="Password"
-              type="password"
-              id="password"
-              name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              errors={errors}
-            />
           </ModalBody>
           <ModalFooter>
             <Button type="submit" color="primary">
-              Create User
+              Update User
             </Button>
             <Button type="button" onClick={toggle}>
               Cancel
@@ -101,4 +87,4 @@ const AddUserModal = () => {
   );
 };
 
-export default AddUserModal;
+export default EditUserModal;
